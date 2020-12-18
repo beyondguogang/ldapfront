@@ -1,0 +1,58 @@
+<html><head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+<div id="app" v-cloak class="signupform">
+    <h1>找回密码</h1>
+    <div class="container">
+
+        <div class="agile_info">
+            <div class="w3l_form">
+                <div class="left_grid_info">
+                    <h3>欢迎！</h3>
+                    <h4>使用玩娱互动账号管理系统</h4>
+                    <p></p>
+                </div>
+            </div>
+            <div class="w3_info">
+                <h2>请输入账号</h2>
+                <form action="#" method="post">
+                    <div class="input-group" :class="{inputdis:controlUsername}">
+                        <!-- <span><i class="fa fa-envelope" aria-hidden="true"></i></span> -->
+                        <span><i class="fa fa-user" aria-hidden="true"></i></span>
+                        <input ref="uid" type="text" placeholder="uid" required="" @focus="focus" @blur="blur">
+                    </div>
+                    <div class="drag" >
+                        <div class="drag_bg"></div>
+                        <div class="drag_text">{{confirmWords}}</div>
+                        <div @mousedown="mousedownFn($event)" class="handler handler_bg"></div>
+                    </div>
+
+                    <button class="btn btn-danger btn-block" type="submit" @click.prevent="submit">提交</button>
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+    <div class="footer">
+
+        <p>版权所有©2020HERO<a href="#" target="_blank" title="玩娱互动">玩娱互动</a> -从<a href="#" title="玩娱互动" target="_blank">玩娱互动</a></p>
+    </div>
+    <div style="display: none;" class="spring-box" v-show="shows">
+        <p class="spring-content">{{verification}}</p>
+    </div>
+</div>
+
+</body></html>
+<script src="node_modules/vue/dist/vue.min.js"></script>
+<script src="node_modules/axios/dist/axios.js"></script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/element-ui/lib/index.js"></script>
+<script src="js/config.js"></script>
+<script src="js/modifyPwd.js"></script>

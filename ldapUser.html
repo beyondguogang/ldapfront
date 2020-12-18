@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ldap-user.css">
+</head>
+<body>
+    <div id="app">
+         <!-- 标题 -->
+        <div class="container-fluid title">
+            <div class="row">
+                <div class="col-lg-12">
+                        <div>用户管理</div>
+                </div>
+            </div>
+        </div>
+        <!-- 搜索 -->
+        <div class="content">
+        <div class="container-fluid search">
+            <div class="row">
+                <div class="col-lg-12 content-body">
+                    <div class="col-lg-12 conten-search">
+                        <div class="row">
+                           <div class="col-lg-9 col-lg-offset-1">
+                           <input ref="uid" placeholder="输入用户名或账号" class="search-in" type="text">
+                           <button @click="userSearch" class="search-btn" style="outline:none">搜索</button> 
+                           </div>
+                           <div class="col-lg-2 col-lg-offset-1 admin">欢迎管理员 <em class="user">admin</em></div>
+                           <div class="col-lg-1 edit_pas" @click="modify_pas">修改密码</div>
+                        </div> 
+                    </div>
+                        
+                    <!-- 表格数据 -->
+                    <div class="col-lg-12" >
+                         <table class="table table-bordered text-nowrap tab_col">
+                                <thead class="thead">
+                                   <tr>
+                                       <td class="serial-number">ID</td>
+                                       <td>用户名</td>
+                                       <td>账号</td>
+                                       <td>邮箱</td>
+                                       <td>姓</td>
+                                       <td>名</td>
+                                       <td>部门</td>
+                                       <td>电话</td>
+                                       <td>操作</td>
+                                   </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                    <tr v-for="(user,i) in userList">
+                                        <td>{{i+1}}</td>
+                                        <td>{{user.uid}}</td>
+                                        <td>{{user.cn}}</td>
+                                        <td>{{user.mail}}</td>
+                                        <td>{{user.sn}}</td>
+                                        <td>{{user.givenName}}</td>
+                                        <td>{{user.departmentNumber}}</td>
+                                        <td>{{user.mobile}}</td>
+                                        <td class="select-td">
+                                            <button style="outline:none" :user_uid="user.uid" @click="editUserShow($event)">编辑</button>
+                                            <button @click="userDel($event)" :user_cn="user.uid" style="outline:none">删除</button>
+                                            <button @click="reset_pas(user.cn)">重置密码</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                    <!--  分页 -->
+                    <div class="col-lg-12 footer paging">
+                        <nav class="bac-col">
+                            <ul class="">
+                                <li>
+                                    <a @click="firstPage" href="javascript:void(0);">
+                                        <i class="fa fa-fast-backward"></i>
+                                    </a>
+                                    <a @click="prePage" href="javascript:void(0);">
+                                        <i class="fa fa-backward"></i>
+                                    </a>
+                                </li>
+                                <li>|<a class="page" href="javascript:void(0);">第{{page}}页</a><a
+                                     class="page page-s" href="javascript:void(0);">共{{pageNum}}页</a>|</li>
+                                <li>
+                                    <a @click="nextPage" href="javascript:void(0);" >
+                                        <!-- <span aria-hidden="true">&raquo;</span> -->
+                                        <i class="fa fa-forward"></i>
+                                    </a>
+                                    <a @click="footPage" href="javascript:void(0);" >
+                                        <i class="fa fa-fast-forward"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div> 
+         <!--编辑弹框  -->
+        <div class="box clearfix" v-show="shows">
+            <div class="edit clearfix">编辑
+                <span aria-hidden="true" class="modal-span" @click="close">&times;</span>
+            </div>
+                <div class="form-horizontal clearfix">
+
+                    <div class="input-box">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-12">
+                              <input type="text" class="form-control" id="u_uid" value=""  placeholder="uid">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">账号</label>
+                            <div class="col-sm-12">
+                              <input type="text" class="form-control" id="u_cn" placeholder="cn" disabled="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-12">
+                              <input type="text" class="form-control" id="u_mail" placeholder="email">
+                            </div>
+                      </div>
+                      <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">真实姓名</label>
+                            <div class="col-sm-12">
+                              <input type="text" class="form-control" id="u_sn" placeholder="sn">
+                            </div>
+                      </div>
+                      <div class="box-footer clearfix">
+                            <!-- <button class="my-btn">取消</button> -->
+                            <button @click="editUserSubmit" class="my-btn true">确定</button>
+                      </div>
+                    </div>
+
+                </div>
+        </div>
+
+        <!-- 修改密码弹框 -->
+        <div class="box clearfix" v-show="modify_shows">
+            <div class="edit clearfix">修改密码
+                <span aria-hidden="true" class="modal-span" @click="modify_close">&times;</span>
+            </div>
+                <div class="form-horizontal clearfix">
+
+                    <div class="input-box">
+                        <div class="form-group username-box" >
+                           <span class="col-sm-2 control-label user-name">用户名 :<em ref="adUserName">admin</em></span> 
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-12">
+                              <input type="password" class="form-control" ref="adminPwd" id="u_uid" value=""  placeholder="请输入密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-sm-12">
+                              <input type="password" class="form-control" ref="adminRePwd" id="u_cn" placeholder="请输入密码">
+                            </div>
+                        </div>
+                      <div class="box-footer clearfix">
+                            <!-- <button class="my-btn">取消</button> -->
+                            <button @click="modifySubmit" class="my-btn true">确定</button>
+                      </div>
+                    </div>
+
+                </div>
+        </div>
+        <!-- 重置密码框 -->
+        <div class="box clearfix" v-show="reset_shows">
+            <div class="edit clearfix">重置密码
+                <span aria-hidden="true" class="modal-span" @click="reset_close">&times;</span>
+            </div>
+                <div class="form-horizontal clearfix">
+
+                    <div class="input-box">
+                        <div class="form-group username-box" >
+                           <span class="col-sm-2 control-label user-name">用户名 :<em ref="userN"></em></span> 
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-12">
+                              <input type="password" class="form-control" ref="userPwd" id="u_uid" value=""  placeholder="请输入密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-sm-12">
+                              <input type="password" class="form-control" ref="userRePwd" id="u_cn" placeholder="请输入密码">
+                            </div>
+                        </div>
+                      <div class="box-footer clearfix">
+                            <!-- <button class="my-btn">取消</button> -->
+                            <button @click="resetSubmit" class="my-btn true">确定</button>
+                      </div>
+                    </div>
+
+                </div>
+        </div>
+
+        <div style="display: none;" class="spring-box" v-show="p_shows">
+            <p class="spring-content">{{verification}}</p>
+        </div>
+
+    </div>
+   
+</body>
+</html>
+<script src="node_modules/vue/dist/vue.min.js"></script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/axios/dist/axios.min.js"></script>
+<script src="node_modules/js-md5/src/md5.js"></script>
+<script src="js/config.js"></script>
+<script src="js/ldapUser.js"></script>
+<script>
+    
+</script>

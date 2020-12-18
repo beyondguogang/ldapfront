@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all">
+
+</head>
+<body>
+<div id="app" v-cloak class="signupform">
+    <h1>重置密码</h1>
+    <div class="container">
+
+        <div class="agile_info">
+            <div class="w3l_form">
+                <div class="left_grid_info">
+                    <h3>欢迎！</h3>
+                    <h4>使用玩娱互动账号管理系统</h4>
+                    <!-- <p> Nam eleifend velit eget dolor vestibulum ornare. Vestibulum est nulla,
+                         fermentum eget euismod et, tincidunt at dui. Nulla tellus nisl, semper
+                         id justo vel, rutrum finibus risus. Cras vel auctor odio.</p> -->
+                    <p></p>
+                    <!-- <ul class="social_section_1info">
+                       <li><a href="#" class="w3_facebook"><i class="fa fa-facebook"></i></a></li>
+                       <li><a href="#" class="w3_twitter"><i class="fa fa-twitter"></i></a></li>
+                       <li><a href="#" class="w3_instagram"><i class="fa fa-instagram"></i></a></li>
+                       <li><a href="#" class="w3_google"><i class="fa fa-google-plus"></i></a></li>
+                       <li><a href="#" class="w3_pinterest"><i class="fa fa-pinterest"></i></a></li>
+                       <li><a href="#" class="w3_vimeo"><i class="fa fa-vimeo"></i></a></li></ul> -->
+
+                </div>
+            </div>
+            <div class="w3_info">
+                <h2>重置密码</h2>
+                <form action="#" method="post">
+
+                    <div class="input-group">
+                        <span><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                        <input ref="email" type="email" placeholder="邮箱" required="required" disabled="disabled" v-model="email">
+                    </div>
+                    <div class="input-group"  :class="{inputdis:controlPassword}">
+                        <span><i class="fa fa-lock" aria-hidden="true"></i></span>
+                        <input ref="password" type="password" placeholder="密码" required="required" @focus="focusPassword" @blur="blurPassword">
+
+                    </div>
+                    <div class="input-group" :class="{inputdis:controlRepassword}">
+                        <span><i class="fa fa-lock" aria-hidden="true"></i></span>
+                        <input ref="repassword" type="Password" placeholder="确认密码" required="required" @focus="focusRepassword" @blur="blurRepassword">
+                    </div>
+                    <div class="drag" >
+                        <div class="drag_bg"></div>
+                        <div class="drag_text">{{confirmWords}}</div>
+                        <div @mousedown="mousedownFn($event)" class="handler handler_bg"></div>
+                    </div>
+                    <button class="btn btn-danger btn-block" type="submit" @click.prevent="submit">提交</button>
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+    <div class="footer">
+
+        <p>版权所有©2020HERO<a href="#" target="_blank" title="玩娱互动">玩娱互动</a> -从<a href="#" title="玩娱互动" target="_blank">玩娱互动</a></p>
+    </div>
+    <div style="display: none;" class="spring-box" v-show="shows">
+        <p class="spring-content">{{verification}}</p>
+    </div>
+</div>
+
+</body>
+</html>
+<script src="node_modules/vue/dist/vue.min.js"></script>
+<script src="node_modules/axios/dist/axios.js"></script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/element-ui/lib/index.js"></script>
+<script src="node_modules/js-md5/src/md5.js"></script>
+<script src="js/config.js"></script>
+<script src="js/resetPwd.js"></script>
